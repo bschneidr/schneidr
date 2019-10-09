@@ -1,4 +1,46 @@
-theme_timeless <- function(base_size = 8,
+#' A simple, reader-friendly ggplot2 theme
+#'
+#' @description A simple ggplot2 theme that tries to simplify the reader's experience by reducing unnecessary lines, and aligning text to be immediately readable. Readers shouldn't have to tilt their heads to read axis labels, and the titles should be the first thing they read.
+#'
+#' @param base_size A single number giving the base size of text in the plot.
+#' @param base_font_family Name of a font family to be used in all text outside of overall plot titles.
+#' @param titles_font_family Name of a font family to be used in overall plot titles.
+#' @param grid_lines A single value from 'x', 'y', `TRUE`, or `FALSE`, specifying which dimensions of gridlines should be included.
+#' @param axis_lines A single value from 'x', 'y', `TRUE`, or `FALSE`, specifying which axes should be marked with a line.
+#' @param axis_ticks A single value from 'x', 'y', `TRUE`, or `FALSE`, specifying which axes should have tick marks on breaks.
+#' @param x_axis_text_align A single value from 'left', 'center', or 'right', indicating how x axis labels should be aligned.
+#' @param y_axis_text_align A single value from 'left', 'center', or 'right', indicating how y axis labels should be aligned.
+#' @param markdown_elements Specify which plot elements should be created using `ggtext::element_markdown()`, allowing the use of markdown text including CSS and HTML. Can be ither 'none' or a character vector with one or more of the following: 'title', 'subtitle', 'caption', 'axis title', 'axis label', or 'strip'.
+#'
+#' @return A full theme element.
+#' @export
+#'
+#' @examples
+#'
+#' library(ggplot2)
+#' mtcars[['gear']] <- factor(mtcars[['gear']])
+#' mtcars_plot <- ggplot(mtcars) +
+#' geom_point(aes(x = wt, y = mpg, color = gear)) +
+#' labs(title = "Fuel economy and weight",
+#'      subtitle = "Data from the 1974 Motor Trend US magazine.",
+#'      x = "Weight (1000 lbs)",
+#'      y = "Fuel economy (mpg)")
+#'
+#' # Basic theme example
+#'   mtcars_plot +
+#'     theme_timeless(grid_lines = TRUE, axis_lines = FALSE)
+#'
+#' # Using markdown elements
+#'
+#'  mtcars_plot +
+#'    labs(title = "Fuel economy and weight",
+#'         subtitle = "Data from the 1974 Motor Trend US magazine.",
+#'         x = "**Weight**<br>*1000 lbs*",
+#'         y = "**Fuel economy**<br>*mpg*")
+#'    theme_timeless(grid_lines = TRUE, axis_lines = FALSE,
+#'                   markdown_elements = 'axis title')
+
+theme_schneidr <- function(base_size = 8,
                            base_font_family = "Rubik",
                            titles_font_family = "Libre Franklin",
                            grid_lines = FALSE,
@@ -97,13 +139,13 @@ theme_timeless <- function(base_size = 8,
       if (use_x_axis_lines) {
         axis_lines_x <- axis_lines_element
       } else {
-        axis_lines_x <- element_blank()
+        axis_lines_x <- ggplot2::element_blank()
       }
 
       if (use_y_axis_lines) {
         axis_lines_y <- axis_lines_element
       } else {
-        axis_lines_y <- element_blank()
+        axis_lines_y <- ggplot2::element_blank()
       }
 
     # Handling of axis ticks
@@ -134,13 +176,13 @@ theme_timeless <- function(base_size = 8,
       if (use_x_axis_ticks) {
         axis_ticks_x <- axis_ticks_element
       } else {
-        axis_ticks_x <- element_blank()
+        axis_ticks_x <- ggplot2::element_blank()
       }
 
       if (use_y_axis_ticks) {
         axis_ticks_y <- axis_ticks_element
       } else {
-        axis_ticks_y <- element_blank()
+        axis_ticks_y <- ggplot2::element_blank()
       }
 
   # Handling of grid lines
@@ -156,7 +198,7 @@ theme_timeless <- function(base_size = 8,
     } else {
 
         major_gridlines <- element_line(colour = 'lightgrey')
-        minor_gridlines <- element_blank()
+        minor_gridlines <- ggplot2::element_blank()
 
         if (is.character(grid_lines)) {
           use_x_gridlines <- grepl(pattern = 'x', x = grid_lines, ignore.case = TRUE)
@@ -173,16 +215,16 @@ theme_timeless <- function(base_size = 8,
       major_gridlines_x <- major_gridlines
       minor_gridlines_x <- minor_gridlines
     } else {
-      major_gridlines_x <- element_blank()
-      minor_gridlines_x <- element_blank()
+      major_gridlines_x <- ggplot2::element_blank()
+      minor_gridlines_x <- ggplot2::element_blank()
     }
 
     if (use_y_gridlines) {
       major_gridlines_y <- major_gridlines
       minor_gridlines_y <- minor_gridlines
     } else {
-      major_gridlines_y <- element_blank()
-      minor_gridlines_y <- element_blank()
+      major_gridlines_y <- ggplot2::element_blank()
+      minor_gridlines_y <- ggplot2::element_blank()
     }
 
   # Handling of text alignment for axes
@@ -237,6 +279,12 @@ theme_timeless <- function(base_size = 8,
                                                                                   color= "#545454",
                                                                                   margin = ggplot2::margin(b = base_size,
                                                                                                            unit = "pt")),
+                                            plot.caption = subtitle_text_element(size = 0.8*base_size,
+                                                                                 face = "italic", family = titles_font_family,
+                                                                                 hjust = 0, vjust = 2,
+                                                                                 color= "#545454",
+                                                                                 margin = ggplot2::margin(b = 0.5*base_size,
+                                                                                                          unit = "pt")),
                                             # Position title/subtitle relative to entire plot (not to main panel)
                                             plot.title.position = 'plot', plot.subtitle.position = 'plot',
                                             # Plot background and grids
