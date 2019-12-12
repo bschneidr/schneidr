@@ -286,7 +286,7 @@ theme_schneidr <- function(base_size = 8,
                                                                                  margin = ggplot2::margin(b = 0.5*base_size,
                                                                                                           unit = "pt")),
                                             # Position title/subtitle relative to entire plot (not to main panel)
-                                            plot.title.position = 'plot', plot.subtitle.position = 'plot',
+                                            plot.title.position = 'plot', plot.caption.position = 'plot',
                                             # Plot background and grids
                                             panel.background = ggplot2::element_blank(), panel.border = ggplot2::element_blank(),
                                             panel.grid.major.x = major_gridlines_x,
