@@ -4,10 +4,17 @@
 \alias{theme_schneidr}
 \title{A simple, reader-friendly ggplot2 theme}
 \usage{
-theme_schneidr(base_size = 8, base_font_family = "Rubik",
-  titles_font_family = "Libre Franklin", grid_lines = FALSE,
-  axis_lines = TRUE, axis_ticks = TRUE, x_axis_text_align = "center",
-  y_axis_text_align = "center", markdown_elements = "none")
+theme_schneidr(
+  base_size = 8,
+  base_font_family = "Rubik",
+  titles_font_family = "Libre Franklin",
+  grid_lines = FALSE,
+  axis_lines = TRUE,
+  axis_ticks = TRUE,
+  x_axis_text_align = "center",
+  y_axis_text_align = "center",
+  markdown_elements = "none"
+)
 }
 \arguments{
 \item{base_size}{A single number giving the base size of text in the plot.}
