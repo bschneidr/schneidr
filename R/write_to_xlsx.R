@@ -39,7 +39,8 @@ write_to_xlsx <- function(x, wb_name = NULL, open_wb = TRUE) {
     # Write the data (If the content is a dataframe, write as a table)
     if (is.data.frame(content_list[[content_index]])) {
       openxlsx::writeDataTable(wb, sheet = sheet_name,
-                               x = content_list[[content_index]])
+                               x = content_list[[content_index]],
+                               tableStyle = "TableStyleMedium16")
     } else {
       openxlsx::writeData(wb, sheet = sheet_name,
                           x = content_list[[content_index]])
