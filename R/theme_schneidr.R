@@ -197,7 +197,7 @@ theme_schneidr <- function(base_size = 8,
 
     } else {
 
-        major_gridlines <- element_line(colour = 'lightgrey')
+        major_gridlines <- ggplot2::element_line(colour = 'lightgrey')
         minor_gridlines <- ggplot2::element_blank()
 
         if (is.character(grid_lines)) {
