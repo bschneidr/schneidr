@@ -28,7 +28,7 @@
 #'
 #' # Basic theme example
 #'   mtcars_plot +
-#'     theme_timeless(grid_lines = TRUE, axis_lines = FALSE)
+#'     theme_schneidr(grid_lines = TRUE, axis_lines = FALSE)
 #'
 #' # Using markdown elements
 #'
@@ -37,7 +37,7 @@
 #'         subtitle = "Data from the 1974 Motor Trend US magazine.",
 #'         x = "**Weight**<br>*1000 lbs*",
 #'         y = "**Fuel economy**<br>*mpg*")
-#'    theme_timeless(grid_lines = TRUE, axis_lines = FALSE,
+#'    theme_schneidr(grid_lines = TRUE, axis_lines = FALSE,
 #'                   markdown_elements = 'axis title')
 
 theme_schneidr <- function(base_size = 8,

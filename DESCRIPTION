@@ -1,7 +1,7 @@
 Package: schneidr
 Type: Package
 Title: Utilities for data visualization, data wrangling, and mathematical statistics.
-Version: 0.1.0
+Version: 0.2.0
 Author: Ben Schneider
 Maintainer: Ben Schneider <benjamin.julius.schneider@gmail.com>
 Description: Provides utilities for data visualization (e.g. ggplot2 theme(s)), data wrangling (e.g. input/output functions), and mathematical statistics (e.g. simple functions for numerical integration).
