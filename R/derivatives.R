@@ -4,9 +4,9 @@
 #'
 #' @title Tools for differentiating mathematical functions
 #'
-#' @description Obtain a function's Jacobian (matrix of first derivatives) or Hessian (matrix of second partial derivatives).
+#' @description Obtain a function's Jacobian (matrix of first partial derivatives) or Hessian (matrix of second partial derivatives).
 #'
-#' @param f A mathematical expression generated with the \code{expression} function (e.g. \code{expression(y*sin(x))})
+#' @param f A mathematical expression (or list of expressions, if using `get_jacobian()`) generated with the \code{expression} function (e.g. \code{expression(y*sin(x))})
 #' @param as_matrix Whether to return the symbolic matrix of derivatives as a list of expressions or as a character matrix.
 #' @param eval_at A named list giving a point at which the matrix of derivatives is to be evaluated (e.g. \code{list(x = 1, y = 2)})
 #'
@@ -125,30 +125,46 @@ get_hessian <- function(f, as_matrix = FALSE, eval_at = NULL) {
 #' @rdname derivatives
 #' @export
 #' @examples
+#'
+#' # Simple vector-valued function giving perimeter and area of a rectangle
+#'
+#' vector_valued_fn <- list('perimeter' = expression(2*w + 2*h), 'area' = expression(w * h))
+#'
 #' # Get the symbolic Jacobian
 #' ## As a nested list
-#'    get_jacobian(fn)
+#'    get_jacobian(vector_valued_fn)
 #'
 #' ## As a character matrix
-#'    get_jacobian(fn, as_matrix = TRUE)
+#'    get_jacobian(vector_valued_fn, as_matrix = TRUE)
 #'
 #' # Evaluate the Jacobian at a specific point
 #'
-#'    get_jacobian(fn, eval_at = list(a = 100, p = 0.5))
+#'    get_jacobian(vector_valued_fn, eval_at = list(w = 10, h = 10))
 
 get_jacobian <- function(f, as_matrix = FALSE, eval_at = NULL) {
 
-  if (is.expression(f)) {
-    fn_inputs <- all.vars(f); names(fn_inputs) <- fn_inputs
-    n_inputs <- length(fn_inputs)
-    n_outputs <- length(f)
+  if (!is.list(f)) {
+    f <- list(f)
   }
+
+  n_outputs <- length(f)
+
+  fn_inputs <- lapply(f, function(f) {
+  if (is.expression(f)) {
+      fn_inputs <- all.vars(f)
+    }
+    return(fn_inputs)
+  })
+
+  fn_inputs <- unique(unlist(fn_inputs))
+  names(fn_inputs) <- fn_inputs
+  n_inputs <- length(fn_inputs)
 
   # Error-checking:
 
   ## Check input types
 
-  if (!is.expression(f)) {stop("`f` must be an expression (e.g. `expression(sin(x)^2)`)")}
+  if (!all(sapply(f, is.expression))) {stop("`f` must be an expression (e.g. `expression(sin(x)^2)`)")}
 
   if (!is.logical(as_matrix)) {stop("`as_matrix` must be TRUE or FALSE (the default)")}
 
@@ -171,11 +187,11 @@ get_jacobian <- function(f, as_matrix = FALSE, eval_at = NULL) {
 
   list_result <- lapply(seq_len(n_outputs), function(x) lapply(fn_inputs, function(x) NULL))
 
-  for (i in length(f)) {
+  for (i in seq_len(n_outputs)) {
 
     for (j in seq_len(n_inputs)) {
 
-      first_deriv <- D(f[i], fn_inputs[j])
+      first_deriv <- D(f[[i]], fn_inputs[j])
       first_deriv <- as.expression(first_deriv)
 
       list_result[[i]][[j]] <- first_deriv
@@ -186,9 +202,9 @@ get_jacobian <- function(f, as_matrix = FALSE, eval_at = NULL) {
   # Convert the symbolic Jacobian to a character matrix
   if (is.null(eval_at)) {
     if (as_matrix) {
-      matrix_result <- matrix(NA_character_, nrow = length(f), ncol = n_inputs)
+      matrix_result <- matrix(NA_character_, nrow = n_outputs, ncol = n_inputs)
 
-      for (i in length(f)) {
+      for (i in seq_len(n_outputs)) {
         for (j in seq_len(n_inputs)) {
 
           matrix_result[i, j] <- gsub("expression", "", toString(list_result[[i]][[j]]), fixed = TRUE)
@@ -203,7 +219,7 @@ get_jacobian <- function(f, as_matrix = FALSE, eval_at = NULL) {
   if (!is.null(eval_at)) {
     result_vals <- matrix(data = NA_real_, nrow = length(f), ncol = n_inputs)
 
-    for (i in length(f)) {
+    for (i in seq_len(n_outputs)) {
       for (j in seq_len(n_inputs)) {
 
         result_vals[i, j] <- eval(list_result[[i]][[j]], envir = eval_at)

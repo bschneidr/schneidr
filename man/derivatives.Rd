@@ -11,7 +11,7 @@ get_hessian(f, as_matrix = FALSE, eval_at = NULL)
 get_jacobian(f, as_matrix = FALSE, eval_at = NULL)
 }
 \arguments{
-\item{f}{A mathematical expression generated with the \code{expression} function (e.g. \code{expression(y*sin(x))})}
+\item{f}{A mathematical expression (or list of expressions, if using `get_jacobian()`) generated with the \code{expression} function (e.g. \code{expression(y*sin(x))})}
 
 \item{as_matrix}{Whether to return the symbolic matrix of derivatives as a list of expressions or as a character matrix.}
 
@@ -21,7 +21,7 @@ get_jacobian(f, as_matrix = FALSE, eval_at = NULL)
 If \code{as_matrix = TRUE}, a character matrix showing the symbolic matrix of derivatives. If \code{as_matrix = FALSE}, the result is a nested list of expressions. To retrieve the entry in row i column j of the matrix, select \code{hessian_result[[i]][[j]]}. If an evaluation point is specified with \code{eval_at}, the matrix of derivatives is evaluated and the result is a numeric matrix.
 }
 \description{
-Obtain a function's Jacobian (matrix of first derivatives) or Hessian (matrix of second partial derivatives).
+Obtain a function's Jacobian (matrix of first partial derivatives) or Hessian (matrix of second partial derivatives).
 }
 \examples{
 # Create a mathematical expression
@@ -38,15 +38,20 @@ fn <- expression(a * log(p/(1-p)))
 
   get_hessian(fn, eval_at = list(a = 100, p = 0.5))
 
+
+# Simple vector-valued function giving perimeter and area of a rectangle
+
+vector_valued_fn <- list('perimeter' = expression(2*w + 2*h), 'area' = expression(w * h))
+
 # Get the symbolic Jacobian
 ## As a nested list
-   get_jacobian(fn)
+   get_jacobian(vector_valued_fn)
 
 ## As a character matrix
-   get_jacobian(fn, as_matrix = TRUE)
+   get_jacobian(vector_valued_fn, as_matrix = TRUE)
 
 # Evaluate the Jacobian at a specific point
 
-   get_jacobian(fn, eval_at = list(a = 100, p = 0.5))
+   get_jacobian(vector_valued_fn, eval_at = list(w = 10, h = 10))
 }
 \concept{math tools}
