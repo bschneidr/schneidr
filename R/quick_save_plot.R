@@ -21,7 +21,7 @@ quick_save_plot <- function(plot = ggplot2::last_plot(),
                             inspect = TRUE,
                             device = "png", dpi = 320, scale = 1, ...) {
 
-  fname <- tempfile(fileext = paste0(".", device))
+  fname <- fname
   ggplot2::ggsave(plot = plot,
                   filename = fname,
                   device = device,
