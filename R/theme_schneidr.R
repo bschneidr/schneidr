@@ -105,8 +105,30 @@ theme_schneidr <- function(base_size = 8,
 
         } else {
 
-          stop(paste("The family", base_font_family, "is not available.",
-                     "Make sure the font is installed on this machine. If it's not one of R's default fonts, try registering and loading it with the `extrafont` package."))
+          rlang::warn(paste("The family", base_font_family, "is not available; using 'sans' instead.",
+                            "Make sure the font is installed on this machine. If it's not one of R's default fonts, try registering and loading it with the `extrafont` package."),
+                      .frequency = "once", .frequency_id = "base_font_family_warning")
+          base_font_family <- 'sans'
+        }
+      }
+    }
+
+    if (!titles_font_family %in% available_fonts) {
+      if ('extrafont' %in% .packages(all.available = TRUE)) {
+
+        if (titles_font_family %in% extrafont::fonts()) {
+
+          library('extrafont')
+          extrafont::loadfonts(device = 'win', quiet = TRUE)
+
+          warning(paste0('Fonts have been loaded via the `extrafont` package in order to use ', titles_font_family))
+
+        } else {
+
+          rlang::warn(paste("The family", titles_font_family, "is not available; using 'sans' instead.",
+                            "Make sure the font is installed on this machine. If it's not one of R's default fonts, try registering and loading it with the `extrafont` package."),
+                      .frequency = "once", .frequency_id = "titles_font_family_warning")
+          titles_font_family <- 'sans'
         }
       }
     }
@@ -307,20 +329,31 @@ theme_schneidr <- function(base_size = 8,
                                             axis.ticks.y = axis_ticks_y,
                                             # Axis text
                                             axis.text.x = axis_label_text_element(size = base_size, family = base_font_family,
-                                                                                colour = "#545454", vjust = 0.5, hjust = x_axis_text_hjust),
+                                                                                  colour = "#545454", vjust = 0.5, hjust = x_axis_text_hjust),
                                             axis.text.y = axis_label_text_element(size = base_size, colour = "#545454",
-                                                                                family = base_font_family, hjust = y_axis_text_hjust),
-                                            axis.title.x = axis_title_text_element(size = base_size*(1.1), colour = "#545454",
-                                                                                 face = "plain", family = base_font_family, angle = 0,
-                                                                                 margin = ggplot2::margin(t = (.8)*base_size, b = (.8)*base_size,
-                                                                                                          l = 0, r = 0,
-                                                                                                          unit = "pt")),
-                                            axis.title.y = axis_title_text_element(size = base_size*(1.1), colour = "#545454",
-                                                                                 face = "plain", family = base_font_family, angle = 0,
-                                                                                 vjust = 0.5,
-                                                                                 margin = ggplot2::margin(t = (.8)*base_size, b = (.8)*base_size,
-                                                                                                          l = 0, r = (.8)*base_size,
-                                                                                                          unit = "pt")),
+                                                                                  family = base_font_family, hjust = y_axis_text_hjust),
+                                            axis.title.x.bottom = axis_title_text_element(size = base_size*(1.1), colour = "#545454",
+                                                                                          face = "plain", family = base_font_family, angle = 0,
+                                                                                          margin = ggplot2::margin(t = (.8)*base_size, b = (.8)*base_size,
+                                                                                                                   l = 0, r = 0,
+                                                                                                                   unit = "pt")),
+                                            axis.title.y.left = axis_title_text_element(size = base_size*(1.1), colour = "#545454",
+                                                                                        face = "plain", family = base_font_family, angle = 0,
+                                                                                        vjust = 0.5,
+                                                                                        margin = ggplot2::margin(t = (.8)*base_size, b = (.8)*base_size,
+                                                                                                                 l = 0, r = (.8)*base_size,
+                                                                                                                 unit = "pt")),
+                                            axis.title.x.top = axis_title_text_element(size = base_size*(1.1), colour = "#545454",
+                                                                                       face = "plain", family = base_font_family, angle = 0,
+                                                                                       margin = ggplot2::margin(t = (.8)*base_size, b = (.8)*base_size,
+                                                                                                                l = 0, r = 0,
+                                                                                                                unit = "pt")),
+                                            axis.title.y.right = axis_title_text_element(size = base_size*(1.1), colour = "#545454",
+                                                                                         face = "plain", family = base_font_family, angle = 0,
+                                                                                         vjust = 0.5,
+                                                                                         margin = ggplot2::margin(t = (.8)*base_size, b = (.8)*base_size,
+                                                                                                                  l = 0, r = (.8)*base_size,
+                                                                                                                  unit = "pt")),
                                             # Strips used in facet labels
                                             strip.placement = "outside",
                                             strip.text.x = strip_text_element(size = base_size*(1.1), colour = "#545454",
